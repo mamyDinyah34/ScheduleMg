@@ -7,18 +7,29 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/baseline_home_20"
-            android:title="@string/menu_home" />
+            android:title="@string/menu_home"
+            android:itemIconTint="@color/menu_icon_color"
+            android:itemTextColor="@color/menu_text_color" />
+
         <item
             android:id="@+id/nav_todo"
             android:icon="@drawable/baseline_pending_actions_24"
-            android:title="@string/menu_todo" />
+            android:title="@string/menu_todo"
+            android:itemIconTint="@color/menu_icon_color"
+            android:itemTextColor="@color/menu_text_color" />
+
         <item
             android:id="@+id/nav_inprogress"
             android:icon="@drawable/baseline_hourglass_bottom_24"
-            android:title="@string/menu_inprogress" />
+            android:title="@string/menu_inprogress"
+            android:itemIconTint="@color/menu_icon_color"
+            android:itemTextColor="@color/menu_text_color" />
+
         <item
             android:id="@+id/nav_finished"
             android:icon="@drawable/baseline_done_24"
-            android:title="@string/menu_finished" />
+            android:title="@string/menu_finished"
+            android:itemIconTint="@color/menu_icon_color"
+            android:itemTextColor="@color/menu_text_color" />
     </group>
 </menu>

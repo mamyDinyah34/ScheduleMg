@@ -2,6 +2,7 @@ package com.mamydinyah.schedulemg
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,8 +12,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
+import android.widget.ToggleButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -30,9 +33,11 @@ import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
 
+
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var taskRepository: TaskRepository
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +50,20 @@ class MainActivity : AppCompatActivity() {
         val database = Connection.getDatabase(this)
         val taskDao = database.taskDao()
         taskRepository = TaskRepository(taskDao)
+
+        // Initialisation du SharedPreferences
+        sharedPreferences = getSharedPreferences("theme_prefs", MODE_PRIVATE)
+        val isDarkMode = sharedPreferences.getBoolean("isDarkMode", false)
+        applyTheme(isDarkMode)
+
+        // Ajout du listener pour le ToggleButton dans la Toolbar
+        val themeToggleButton = findViewById<ToggleButton>(R.id.themeActionButton)
+        themeToggleButton.isChecked = isDarkMode
+        themeToggleButton.setOnCheckedChangeListener { _, isChecked ->
+            applyTheme(isChecked)
+            saveThemePreference(isChecked)
+        }
+
         binding.appBarMain.fab.setOnClickListener {
             showFormDialog()
         }
@@ -68,6 +87,20 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    private fun applyTheme(isDarkMode: Boolean) {
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+    }
+
+    private fun saveThemePreference(isDarkMode: Boolean) {
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("isDarkMode", isDarkMode)
+        editor.apply()
     }
 
    /* private fun showFormDialog() {

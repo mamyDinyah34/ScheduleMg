@@ -8,4 +8,15 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#212121</color>
+        <color name="toolbar_bg">#FFFFFF</color>
+        <color name="toolbar_text">#000000</color>
+        <color name="fab_bg">#6200EE</color>
+        <color name="calendar_text">#000000</color>
+        <color name="calendar_bg">#4C7CDE</color>
+        <color name="text_clock">#FF0000</color>
+
+
+    <color name="menu_text_color">#000000</color>
+    <color name="menu_icon_color">#2196F3</color>
+    <color name="menu_background_color">#FFFFFF</color>
 </resources>
