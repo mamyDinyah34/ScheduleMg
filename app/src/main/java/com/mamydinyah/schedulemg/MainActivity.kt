@@ -27,6 +27,7 @@ import com.mamydinyah.schedulemg.data.Connection
 import com.mamydinyah.schedulemg.data.Task
 import com.mamydinyah.schedulemg.data.TaskRepository
 import com.mamydinyah.schedulemg.databinding.ActivityMainBinding
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.Executors
@@ -72,16 +73,11 @@ class MainActivity : AppCompatActivity() {
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.nav_home, R.id.nav_todo, R.id.nav_inprogress, R.id.nav_finished),
+            setOf(R.id.nav_home, R.id.nav_all, R.id.nav_todo, R.id.nav_inprogress, R.id.nav_finished, R.id.nav_settings, R.id.nav_about),
             drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        return true
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -221,7 +217,7 @@ class MainActivity : AppCompatActivity() {
                     description = description,
                     date = date,
                     time = time,
-                    isFinished = false
+                    status = getStatus(date, time)
                 )
                 insertTask(task)
                 dialog.dismiss()
@@ -235,6 +231,25 @@ class MainActivity : AppCompatActivity() {
     private fun insertTask(task: Task) {
         Executors.newSingleThreadExecutor().execute {
             taskRepository.insertTask(task)
+        }
+    }
+
+    private fun getStatus(date: String, time: String): String {
+        val dateFormat = SimpleDateFormat("dd - MM - yyyy HH:mm", Locale.getDefault())
+        val currentDateTime = Calendar.getInstance()
+
+        return try {
+            val taskDateTime = Calendar.getInstance()
+            taskDateTime.time = dateFormat.parse("$date $time")
+
+            when {
+                taskDateTime.before(currentDateTime) -> "finished"
+                taskDateTime.after(currentDateTime) -> "to do"
+                else -> "in progress"
+            }
+        } catch (e: ParseException) {
+            e.printStackTrace()
+            "unknown"
         }
     }
 

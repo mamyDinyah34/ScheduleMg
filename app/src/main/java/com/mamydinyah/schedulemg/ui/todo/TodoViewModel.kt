@@ -9,13 +9,17 @@ import com.mamydinyah.schedulemg.data.TaskRepository
 
 class TodoViewModel(application: Application) : ViewModel() {
 
-    val allTasks: LiveData<List<Task>>
+    val tasksByStatusToDo: LiveData<List<Task>>
     private val repository: TaskRepository
 
     init {
         val taskDao = Connection.getDatabase(application).taskDao()
         repository = TaskRepository(taskDao)
-        allTasks = repository.allTasks
+        tasksByStatusToDo = repository.tasksByStatusToDo()
+    }
+
+    fun deleteTaskById(id: Int) {
+        repository.deleteTaskById(id)
     }
 
     /*private val _text = MutableLiveData<String>().apply {

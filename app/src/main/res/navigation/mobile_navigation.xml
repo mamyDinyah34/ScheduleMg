@@ -12,6 +12,12 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/nav_all"
+        android:name="com.mamydinyah.schedulemg.ui.all.AllFragment"
+        android:label="@string/menu_all"
+        tools:layout="@layout/fragment_all" />
+
+    <fragment
         android:id="@+id/nav_todo"
         android:name="com.mamydinyah.schedulemg.ui.todo.TodoFragment"
         android:label="@string/menu_todo"

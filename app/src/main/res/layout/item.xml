@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/gray"
+        app:cardBackgroundColor="@color/card_background"
         app:cardCornerRadius="4dp"
         app:cardElevation="4dp"
         app:cardUseCompatPadding="true">
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp">
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/delete"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
@@ -27,8 +27,19 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/baseline_delete_24"
+                android:backgroundTint="@color/icon_delete"
                 tools:ignore="ContentDescription" />
 
+            <ImageView
+                android:id="@+id/edit"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="55dp"
+                android:background="@drawable/outline_edit_24"
+                android:backgroundTint="@color/icon_edit"
+                tools:ignore="ContentDescription" />
 
             <LinearLayout
                 android:id="@+id/titleRow"
@@ -43,7 +54,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/baseline_assignment_24"
-                    android:textColor="@color/white"
+                    android:backgroundTint="@color/icon_color"
                     tools:ignore="ContentDescription" />
 
                 <TextView
@@ -54,7 +65,7 @@
                     android:layout_marginBottom="8dp"
                     android:text="@string/title"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"
+                    android:textColor="@color/card_text"
                     android:textSize="18sp" />
             </LinearLayout>
 
@@ -71,6 +82,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/baseline_event_24"
+                    android:backgroundTint="@color/icon_color"
                     tools:ignore="ContentDescription" />
 
                 <TextView
@@ -81,12 +93,13 @@
                     android:layout_marginBottom="8dp"
                     android:text="@string/date"
                     android:textAllCaps="true"
-                    android:textColor="@color/white"
+                    android:textColor="@color/card_text"
                     android:textSize="12sp" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/timeRow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/dateRow"
@@ -96,8 +109,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="8dp"
                     android:background="@drawable/baseline_schedule_24"
+                    android:backgroundTint="@color/icon_color"
                     tools:ignore="ContentDescription" />
 
                 <TextView
@@ -105,14 +119,47 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="8dp"
                     android:text="@string/time"
                     android:textAllCaps="true"
-                    android:textColor="@color/white"
+                    android:textColor="@color/card_text"
                     android:textSize="12sp" />
-
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/timeRow"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/description"
+                android:textColor="@color/card_text"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/status_point"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="115dp"
+                android:layout_marginEnd="20dp"
+                android:text="@string/point"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/status_point"
+                android:layout_alignBaseline="@+id/status_point"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="115dp"
+                android:layout_marginEnd="50dp"
+                android:text="@string/status"
+                android:textColor="@color/card_text"
+                android:textSize="14sp" />
+
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
-
-</RelativeLayout>
+</LinearLayout>

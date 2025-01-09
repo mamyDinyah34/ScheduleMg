@@ -1,22 +1,21 @@
-package com.mamydinyah.schedulemg.ui.finished
+package com.mamydinyah.schedulemg.ui.all
 
 import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mamydinyah.schedulemg.data.Connection
 import com.mamydinyah.schedulemg.data.Task
 import com.mamydinyah.schedulemg.data.TaskRepository
 
-class FinishedVIewModel(application: Application) : ViewModel() {
+class AllViewModel(application: Application) : ViewModel() {
 
-    val tasksByStatusFinished: LiveData<List<Task>>
+    val allTasks: LiveData<List<Task>>
     private val repository: TaskRepository
 
     init {
         val taskDao = Connection.getDatabase(application).taskDao()
         repository = TaskRepository(taskDao)
-        tasksByStatusFinished = repository.tasksByStatusFinished()
+        allTasks = repository.allTasks
     }
 
     fun deleteTaskById(id: Int) {

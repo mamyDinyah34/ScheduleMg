@@ -11,5 +11,5 @@ data class Task (
     val description: String,
     val date: String,
     val time: String,
-    val isFinished: Boolean
+    val status: String
 )

@@ -10,13 +10,19 @@
     <color name="gray">#212121</color>
         <color name="toolbar_bg">#FFFFFF</color>
         <color name="toolbar_text">#000000</color>
-        <color name="fab_bg">#6200EE</color>
+        <color name="fab_bg">#6428B8</color>
         <color name="calendar_text">#000000</color>
         <color name="calendar_bg">#4C7CDE</color>
         <color name="text_clock">#FF0000</color>
 
 
     <color name="menu_text_color">#000000</color>
-    <color name="menu_icon_color">#2196F3</color>
+    <color name="menu_icon_color">#0C2EE9</color>
     <color name="menu_background_color">#FFFFFF</color>
+
+    <color name="card_background">#F5F5F5</color>
+    <color name="card_text">#666666</color>
+    <color name="icon_color">#000000</color>
+    <color name="icon_delete">#F44336</color>
+    <color name="icon_edit">#2196F3</color>
 </resources>

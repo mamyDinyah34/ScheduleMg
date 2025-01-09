@@ -1,13 +1,25 @@
 package com.mamydinyah.schedulemg.ui.inprogress
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mamydinyah.schedulemg.data.Connection
+import com.mamydinyah.schedulemg.data.Task
+import com.mamydinyah.schedulemg.data.TaskRepository
 
-class InprogressViewModel : ViewModel() {
+class InprogressViewModel(application: Application) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is In progress Fragment"
+    val tasksByStatusInProgress: LiveData<List<Task>>
+    private val repository: TaskRepository
+
+    init {
+        val taskDao = Connection.getDatabase(application).taskDao()
+        repository = TaskRepository(taskDao)
+        tasksByStatusInProgress = repository.tasksByStatusInProgress()
     }
-    val text: LiveData<String> = _text
+
+    fun deleteTaskById(id: Int) {
+        repository.deleteTaskById(id)
+    }
 }
