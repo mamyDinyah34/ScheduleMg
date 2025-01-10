@@ -11,12 +11,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mamydinyah.schedulemg.data.Task
 import com.mamydinyah.schedulemg.data.TaskAdapter
-import com.mamydinyah.schedulemg.databinding.FragmentTodoBinding
+import com.mamydinyah.schedulemg.databinding.FragmentFinishedBinding
 
 class FinishedFragment : Fragment() {
 
     private lateinit var finishedVIewModel: FinishedVIewModel
-    private var _binding: FragmentTodoBinding? = null
+    private var _binding: FragmentFinishedBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -27,7 +27,7 @@ class FinishedFragment : Fragment() {
         val factory = FinishedVIewModelFactory(requireActivity().application)
         finishedVIewModel = ViewModelProvider(this, factory).get(FinishedVIewModel::class.java)
 
-        _binding = FragmentTodoBinding.inflate(inflater, container, false)
+        _binding = FragmentFinishedBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val recyclerView = binding.recyclerView

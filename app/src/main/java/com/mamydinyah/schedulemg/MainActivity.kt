@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.TextView
 import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.AlertDialog
@@ -65,19 +66,24 @@ class MainActivity : AppCompatActivity() {
             saveThemePreference(isChecked)
         }
 
-        binding.appBarMain.fab.setOnClickListener {
-            showFormDialog()
-        }
-
-        val drawerLayout: DrawerLayout = binding.drawerLayout
-        val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(
             setOf(R.id.nav_home, R.id.nav_all, R.id.nav_todo, R.id.nav_inprogress, R.id.nav_finished, R.id.nav_settings, R.id.nav_about),
-            drawerLayout
+            binding.drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        binding.navView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.nav_home, R.id.nav_all -> binding.appBarMain.fab.show()
+                else -> binding.appBarMain.fab.hide()
+            }
+        }
+
+        binding.appBarMain.fab.setOnClickListener {
+            showFormDialog()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -165,14 +171,21 @@ class MainActivity : AppCompatActivity() {
         val editTextTitle: EditText = view.findViewById(R.id.editTextTitle)
         val editTextDescription: EditText = view.findViewById(R.id.editTextDescription)
         val editTextDate: EditText = view.findViewById(R.id.editTextDate)
-        val editTextTime: EditText = view.findViewById(R.id.editTextTime)
+        val editTextStartTime: EditText = view.findViewById(R.id.editTextStartTime)
+        val editTextEndTime: EditText = view.findViewById(R.id.editTextEndTime)
+        val titleError: TextView = view.findViewById(R.id.titleError)
+        val descriptionError: TextView = view.findViewById(R.id.descriptionError)
+        val dateError: TextView = view.findViewById(R.id.dateError)
+        val startTimeError: TextView = view.findViewById(R.id.startTimeError)
+        val endTimeError: TextView = view.findViewById(R.id.endTimeError)
 
         val calendar = Calendar.getInstance()
-        val dateFormatter = SimpleDateFormat("dd - MM - yyyy", Locale.getDefault())
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val timeFormatter = SimpleDateFormat("HH:mm", Locale.getDefault())
 
         editTextDate.setText(dateFormatter.format(calendar.time))
-        editTextTime.setText(timeFormatter.format(calendar.time))
+        editTextStartTime.setText(timeFormatter.format(calendar.time))
+        editTextEndTime.setText(timeFormatter.format(calendar.time))
 
         editTextDate.setOnClickListener {
             val year = calendar.get(Calendar.YEAR)
@@ -184,17 +197,38 @@ class MainActivity : AppCompatActivity() {
                 calendar.set(Calendar.MONTH, selectedMonth)
                 calendar.set(Calendar.DAY_OF_MONTH, selectedDay)
                 editTextDate.setText(dateFormatter.format(calendar.time))
+                dateError.visibility = View.GONE
             }, year, month, day).show()
         }
 
-        editTextTime.setOnClickListener {
+        editTextStartTime.setOnClickListener {
             val hour = calendar.get(Calendar.HOUR_OF_DAY)
             val minute = calendar.get(Calendar.MINUTE)
 
             TimePickerDialog(this, { _, selectedHour, selectedMinute ->
                 calendar.set(Calendar.HOUR_OF_DAY, selectedHour)
                 calendar.set(Calendar.MINUTE, selectedMinute)
-                editTextTime.setText(timeFormatter.format(calendar.time))
+                editTextStartTime.setText(timeFormatter.format(calendar.time))
+                startTimeError.visibility = View.GONE
+            }, hour, minute, true).show()
+        }
+
+        editTextEndTime.setOnClickListener {
+            val hour = calendar.get(Calendar.HOUR_OF_DAY)
+            val minute = calendar.get(Calendar.MINUTE)
+            val selectedStartTime = timeFormatter.parse(editTextStartTime.text.toString())
+
+            TimePickerDialog(this, { _, selectedHour, selectedMinute ->
+                calendar.set(Calendar.HOUR_OF_DAY, selectedHour)
+                calendar.set(Calendar.MINUTE, selectedMinute)
+                val selectedEndTime = calendar.time
+
+                if (selectedEndTime.after(selectedStartTime)) {
+                    editTextEndTime.setText(timeFormatter.format(selectedEndTime))
+                    endTimeError.visibility = View.GONE
+                } else {
+                    endTimeError.visibility = View.VISIBLE
+                }
             }, hour, minute, true).show()
         }
 
@@ -205,19 +239,61 @@ class MainActivity : AppCompatActivity() {
         buttonSubmit.setOnClickListener {
             val title = editTextTitle.text.toString().trim()
             val description = editTextDescription.text.toString().trim()
-            val date = editTextDate.text.toString().trim()
-            val time = editTextTime.text.toString().trim()
+            val date = editTextDate.text.toString().trim() // Maintenant dans le format yyyy-MM-dd
+            val startTime = editTextStartTime.text.toString().trim()
+            val endTime = editTextEndTime.text.toString().trim()
 
-            if (title.isEmpty() || description.isEmpty() || date.isEmpty() || time.isEmpty()) {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+            var isValid = true
+
+            if (title.isEmpty()) {
+                titleError.visibility = View.VISIBLE
+                titleError.text = "Title is required"
+                isValid = false
             } else {
+                titleError.visibility = View.GONE
+            }
+
+            if (description.isEmpty()) {
+                descriptionError.visibility = View.VISIBLE
+                descriptionError.text = "Description is required"
+                isValid = false
+            } else {
+                descriptionError.visibility = View.GONE
+            }
+
+            if (date.isEmpty()) {
+                dateError.visibility = View.VISIBLE
+                dateError.text = "Date is required"
+                isValid = false
+            } else {
+                dateError.visibility = View.GONE
+            }
+
+            if (startTime.isEmpty()) {
+                startTimeError.visibility = View.VISIBLE
+                startTimeError.text = "Start time is required"
+                isValid = false
+            } else {
+                startTimeError.visibility = View.GONE
+            }
+
+            if (endTime.isEmpty() || endTime <= startTime) {
+                endTimeError.visibility = View.VISIBLE
+                endTimeError.text = "End time must be after start time"
+                isValid = false
+            } else {
+                endTimeError.visibility = View.GONE
+            }
+
+            if (isValid) {
                 val task = Task(
                     id = 0,
                     title = title,
                     description = description,
-                    date = date,
-                    time = time,
-                    status = getStatus(date, time)
+                    date = date, // Date au format yyyy-MM-dd
+                    startTime = startTime,
+                    endTime = endTime,
+                    status = getStatus(date, startTime, endTime)
                 )
                 insertTask(task)
                 dialog.dismiss()
@@ -234,23 +310,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getStatus(date: String, time: String): String {
-        val dateFormat = SimpleDateFormat("dd - MM - yyyy HH:mm", Locale.getDefault())
+    private fun getStatus(date: String, startTime: String, endTime: String): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val currentDateTime = Calendar.getInstance()
 
         return try {
-            val taskDateTime = Calendar.getInstance()
-            taskDateTime.time = dateFormat.parse("$date $time")
+            val taskStartDateTime = Calendar.getInstance()
+            val taskEndDateTime = Calendar.getInstance()
+            taskStartDateTime.time = dateFormat.parse("$date $startTime")
+            taskEndDateTime.time = dateFormat.parse("$date $endTime")
 
             when {
-                taskDateTime.before(currentDateTime) -> "finished"
-                taskDateTime.after(currentDateTime) -> "to do"
-                else -> "in progress"
+                taskEndDateTime.before(currentDateTime) -> "finished"
+                taskStartDateTime.after(currentDateTime) -> "to do"
+                taskStartDateTime.before(currentDateTime) && taskEndDateTime.after(currentDateTime) -> "in progress"
+                else -> "unknown"
             }
         } catch (e: ParseException) {
             e.printStackTrace()
             "unknown"
         }
     }
-
 }

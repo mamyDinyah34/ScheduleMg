@@ -17,10 +17,11 @@ class TaskAdapter(
             binding.title.text = task.title
             binding.description.text = task.description
             binding.dateTitle.text = task.date
-            binding.timeTitle.text = task.time
+            val formattedTime = "${task.startTime} <--> ${task.endTime}"
+            binding.startTime.text = formattedTime
             binding.status.text = task.status
             binding.statusPoint.text = "**"
-            binding.statusPoint.setTextColor(getStatusColor(task.status)) // Définir la couleur du point
+            binding.statusPoint.setTextColor(getStatusColor(task.status))
 
             binding.delete.setOnClickListener {
                 confirmDeleteCallback(task)

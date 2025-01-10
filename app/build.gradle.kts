@@ -60,4 +60,5 @@ dependencies {
     annotationProcessor ("androidx.room:room-compiler:2.5.2")
     implementation ("androidx.room:room-ktx:2.5.2")
     kapt ("androidx.room:room-compiler:2.5.2")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
 }

@@ -9,14 +9,15 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mamydinyah.schedulemg.DatePickerFragment
 import com.mamydinyah.schedulemg.data.Task
 import com.mamydinyah.schedulemg.data.TaskAdapter
-import com.mamydinyah.schedulemg.databinding.FragmentTodoBinding
+import com.mamydinyah.schedulemg.databinding.FragmentAllBinding
 
 class AllFragment : Fragment() {
 
     private lateinit var allViewModel: AllViewModel
-    private var _binding: FragmentTodoBinding? = null
+    private var _binding: FragmentAllBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -27,22 +28,20 @@ class AllFragment : Fragment() {
         val factory = AllViewModelFactory(requireActivity().application)
         allViewModel = ViewModelProvider(this, factory).get(AllViewModel::class.java)
 
-        _binding = FragmentTodoBinding.inflate(inflater, container, false)
+        _binding = FragmentAllBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
-        //deleteOldDatabase()
 
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Observe tasks
-        allViewModel.allTasks.observe(viewLifecycleOwner) { tasks ->
+        allViewModel.filteredTasks.observe(viewLifecycleOwner) { tasks ->
             if (tasks.isNullOrEmpty()) {
                 binding.textNoTasks.visibility = View.VISIBLE
                 binding.recyclerView.visibility = View.GONE
             } else {
                 binding.textNoTasks.visibility = View.GONE
                 binding.recyclerView.visibility = View.VISIBLE
+
                 val taskAdapter = TaskAdapter(tasks, { task ->
                     allViewModel.deleteTaskById(task.id)
                 }, { task ->
@@ -52,6 +51,17 @@ class AllFragment : Fragment() {
             }
         }
 
+        binding.filterDate.dateInput.setOnClickListener {
+            val datePicker = DatePickerFragment { selectedDate ->
+                binding.filterDate.dateInput.setText(selectedDate)
+                allViewModel.filterTasksByDate(selectedDate)
+            }
+            datePicker.show(parentFragmentManager, "datePicker")
+        }
+        binding.filterDate.resetButton.setOnClickListener {
+            binding.filterDate.dateInput.text.clear()
+            allViewModel.resetFilter()
+        }
         return root
     }
 
@@ -78,4 +88,12 @@ class AllFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    /*private fun deleteOldDatabase() {
+        val context = requireContext()
+        val dbName = "task_database"
+        context.deleteDatabase(dbName)
+        Toast.makeText(context, "Old database deleted", Toast.LENGTH_SHORT).show()
+    }*/
+
 }
