@@ -25,29 +25,66 @@
                 android:layout_marginEnd="@dimen/fab_margin"
                 android:background="@drawable/button_day_night"
                 android:checked="false"
-                android:layout_centerVertical="true"
-                android:layout_alignParentEnd="true"
                 android:text=""
                 android:textOff=""
                 android:textOn=""
                 />
         </androidx.appcompat.widget.Toolbar>
 
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_main" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_menu_add"
-        app:fabSize="normal"
-        app:tint="@android:color/white"
-        app:backgroundTint="#212121"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            app:srcCompat="@android:drawable/ic_menu_add"
+            app:tint="@android:color/white"
+            app:backgroundTint="#212121"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnLastWeek"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Last Week"
+                android:background="@color/orange" /> <!-- Orange color from your resources -->
+
+            <Button
+                android:id="@+id/btnThisWeek"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="This Week"
+                android:background="@color/green" /> <!-- Green color from your resources -->
+
+            <Button
+                android:id="@+id/btnNextWeek"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Next Week"
+                android:background="@color/blue" /> <!-- Blue color from your resources -->
+
+        </LinearLayout>
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -9,8 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mamydinyah.schedulemg.crudGen.DatePickerFragment
-import com.mamydinyah.schedulemg.crudGen.EditModal
+import com.mamydinyah.schedulemg.crud.DatePickerFragment
+import com.mamydinyah.schedulemg.crud.EditModal
 import com.mamydinyah.schedulemg.data.Task
 import com.mamydinyah.schedulemg.data.TaskAdapter
 import com.mamydinyah.schedulemg.databinding.FragmentFinishedBinding

@@ -1,4 +1,4 @@
-package com.mamydinyah.schedulemg.crudGen
+package com.mamydinyah.schedulemg.crud
 
 import android.os.Handler
 import android.os.Looper

@@ -65,4 +65,16 @@ class TaskRepository(private val taskDao: TaskDao) {
     fun updateTask(task: Task) {
         taskDao.update(task)
     }
+
+    fun getTasksForThisWeek(): LiveData<List<Task>> {
+        return taskDao.getTasksForThisWeek()
+    }
+
+    fun getTasksForLastWeek(): LiveData<List<Task>> {
+        return taskDao.getTasksForLastWeek()
+    }
+
+    fun getTasksForNextWeek(): LiveData<List<Task>> {
+        return taskDao.getTasksForNextWeek()
+    }
 }
