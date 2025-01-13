@@ -11,7 +11,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.mamydinyah.schedulemg.crud.TaskManager
+import com.mamydinyah.schedulemg.crud.AddModal
 import com.mamydinyah.schedulemg.data.Connection
 import com.mamydinyah.schedulemg.data.TaskRepository
 import com.mamydinyah.schedulemg.databinding.ActivityMainBinding
@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var taskRepository: TaskRepository
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var taskManager: TaskManager
+    private lateinit var addModal: AddModal
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         val taskDao = database.taskDao()
         taskRepository = TaskRepository(taskDao)
 
-        taskManager = TaskManager(this, taskRepository)
+        addModal = AddModal(this, taskRepository)
 
         // Initialisation du SharedPreferences
         sharedPreferences = getSharedPreferences("theme_prefs", MODE_PRIVATE)
@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.appBarMain.fab.setOnClickListener {
-            taskManager.showTaskCreationDialog()
+            addModal.showTaskCreationDialog()
         }
 
         taskRepository.updateTaskStatus()

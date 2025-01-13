@@ -15,17 +15,24 @@ import java.util.Locale
 class AllViewModel(application: Application) : ViewModel() {
 
     val allTasks: LiveData<List<Task>>
+    val tasksForThisWeek: LiveData<List<Task>>
+    val tasksForLastWeek: LiveData<List<Task>>
+    val tasksForNextWeek: LiveData<List<Task>>
     private val repository: TaskRepository
     private val selectedDate = MutableLiveData<String>()
     val filteredTasks = MediatorLiveData<List<Task>>().apply {
         value = emptyList()
     }
+    private val currentFilterMode = MutableLiveData<String>()
     private val taskStatusUpdater: TaskStatusUpdater
 
     init {
         val taskDao = Connection.getDatabase(application).taskDao()
         repository = TaskRepository(taskDao)
         allTasks = repository.allTasks
+        tasksForThisWeek = repository.getTasksForThisWeek()
+        tasksForLastWeek = repository.getTasksForLastWeek()
+        tasksForNextWeek = repository.getTasksForNextWeek()
 
         filteredTasks.addSource(allTasks) { tasks ->
             filterTasks(tasks, selectedDate.value)
@@ -34,6 +41,7 @@ class AllViewModel(application: Application) : ViewModel() {
         filteredTasks.addSource(selectedDate) { date ->
             filterTasks(allTasks.value, date)
         }
+
         taskStatusUpdater = TaskStatusUpdater(repository)
     }
 
@@ -45,9 +53,16 @@ class AllViewModel(application: Application) : ViewModel() {
         taskStatusUpdater.stop()
     }
 
-    private fun filterTasks(tasks: List<Task>?, date: String?) {
+    fun filterTasks(tasks: List<Task>?, date: String?) {
+        val filteredByWeek = when (currentFilterMode.value) {
+            "lastWeek" -> tasksForLastWeek.value
+            "thisWeek" -> tasksForThisWeek.value
+            "nextWeek" -> tasksForNextWeek.value
+            else -> tasks
+        }
+
         if (date.isNullOrEmpty()) {
-            filteredTasks.value = tasks
+            filteredTasks.value = filteredByWeek
         } else {
             val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
             val dateToCompare = try {
@@ -58,12 +73,23 @@ class AllViewModel(application: Application) : ViewModel() {
             }
 
             if (dateToCompare != null) {
-                val filtered = tasks?.filter { it.date == dateToCompare }
+                val filtered = filteredByWeek?.filter { it.date == dateToCompare }
                 filteredTasks.value = filtered
             } else {
                 filteredTasks.value = emptyList()
             }
         }
+    }
+
+    fun setFilterMode(mode: String) {
+        currentFilterMode.value = mode
+        filterTasks(allTasks.value, selectedDate.value)
+    }
+
+    fun resetFilter() {
+        selectedDate.value = ""
+        currentFilterMode.value = "all"
+        filterTasks(allTasks.value, null)
     }
 
     fun filterTasksByDate(date: String) {
@@ -73,11 +99,6 @@ class AllViewModel(application: Application) : ViewModel() {
     fun deleteTaskById(id: Int) {
         repository.deleteTaskById(id)
     }
-
-    fun resetFilter() {
-        selectedDate.value = ""
-    }
-
     fun getTaskById(id: Int): LiveData<Task> {
         return repository.getTaskById(id)
     }
@@ -86,4 +107,3 @@ class AllViewModel(application: Application) : ViewModel() {
         return repository
     }
 }
-

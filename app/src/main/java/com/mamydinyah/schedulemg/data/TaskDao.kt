@@ -36,18 +36,20 @@ interface TaskDao {
     fun update(task: Task)
 
     @Query("""
-        SELECT * FROM task_table
-        WHERE strftime('%Y-%W', date) = strftime('%Y-%W', 'now')
-        ORDER BY id ASC
+    SELECT * FROM task_table
+    WHERE strftime('%Y-%W', date) = strftime('%Y-%W', 'now')
+    ORDER BY id ASC
     """)
     fun getTasksForThisWeek(): LiveData<List<Task>>
 
+
     @Query("""
-        SELECT * FROM task_table
-        WHERE strftime('%Y-%W', date) = strftime('%Y-%W', 'now', '-1 week')
-        ORDER BY id ASC
+    SELECT * FROM task_table
+    WHERE strftime('%Y-%W', date) = strftime('%Y-%W', 'now', '-1 week')
+    ORDER BY id ASC
     """)
     fun getTasksForLastWeek(): LiveData<List<Task>>
+
 
     @Query("""
         SELECT * FROM task_table
@@ -55,4 +57,11 @@ interface TaskDao {
         ORDER BY id ASC
     """)
     fun getTasksForNextWeek(): LiveData<List<Task>>
+    @Query("""
+    SELECT * FROM task_table
+    WHERE date BETWEEN :startDate AND :endDate
+    ORDER BY id ASC
+    """)
+    fun getTasksWithinDateRange(startDate: String, endDate: String): LiveData<List<Task>>
+
 }

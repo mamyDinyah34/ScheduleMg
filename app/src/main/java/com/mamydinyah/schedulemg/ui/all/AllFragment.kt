@@ -35,6 +35,7 @@ class AllFragment : Fragment() {
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        // Observe filtered tasks
         allViewModel.filteredTasks.observe(viewLifecycleOwner) { tasks ->
             if (tasks.isNullOrEmpty()) {
                 binding.textNoTasks.visibility = View.VISIBLE
@@ -67,6 +68,31 @@ class AllFragment : Fragment() {
         binding.filterDate.resetButton.setOnClickListener {
             binding.filterDate.dateInput.text.clear()
             allViewModel.resetFilter()
+        }
+
+        // Button click handlers for task filters
+        binding.filterDate.btnAll.setOnClickListener {
+            allViewModel.allTasks.observe(viewLifecycleOwner) { tasks ->
+                allViewModel.filterTasks(tasks, "")
+            }
+        }
+
+        binding.filterDate.btnLastWeek.setOnClickListener {
+            allViewModel.tasksForLastWeek.observe(viewLifecycleOwner) { tasks ->
+                allViewModel.filterTasks(tasks, "")
+            }
+        }
+
+        binding.filterDate.btnThisWeek.setOnClickListener {
+            allViewModel.tasksForThisWeek.observe(viewLifecycleOwner) { tasks ->
+                allViewModel.filterTasks(tasks, "")
+            }
+        }
+
+        binding.filterDate.btnNextWeek.setOnClickListener {
+            allViewModel.tasksForNextWeek.observe(viewLifecycleOwner) { tasks ->
+                allViewModel.filterTasks(tasks, "")
+            }
         }
 
         return root

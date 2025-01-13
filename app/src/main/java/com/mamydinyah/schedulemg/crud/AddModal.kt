@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.Executors
 
-class TaskManager(
+class AddModal(
     private val context: Context,
     private val taskRepository: TaskRepository
 ) {

@@ -7,7 +7,7 @@ import com.mamydinyah.schedulemg.data.TaskRepository
 
 class TaskStatusUpdater(
     private val repository: TaskRepository,
-    private val updateInterval: Long = 20000 // 60 secondes
+    private val updateInterval: Long = 20000 //20 secondes
     )
 {
     private val handler = Handler(Looper.getMainLooper())

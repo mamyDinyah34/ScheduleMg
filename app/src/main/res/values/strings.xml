@@ -42,11 +42,9 @@
     <string name="facebook">Facebook</string>
     <string name="whatsapp">WhatsApp</string>
     <string name="email">Email</string>
-
-    <string-array name="filter_options">
-        <item>Last Week</item>
-        <item>Next Week</item>
-        <item>Last Month</item>
-        <item>Last Year</item>
-    </string-array>
+    <string name="this_week">This Week</string>
+    <string name="last_week">Last Week</string>
+    <string name="next_week">Next Week</string>
+    <string name="all">All</string>
+    <string name="today">Today</string>
 </resources>
