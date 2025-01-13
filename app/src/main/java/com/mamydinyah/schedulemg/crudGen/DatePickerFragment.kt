@@ -1,4 +1,4 @@
-package com.mamydinyah.schedulemg
+package com.mamydinyah.schedulemg.crudGen
 
 import android.app.DatePickerDialog
 import android.app.Dialog

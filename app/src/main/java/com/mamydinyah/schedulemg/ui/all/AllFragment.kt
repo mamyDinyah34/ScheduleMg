@@ -9,7 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mamydinyah.schedulemg.DatePickerFragment
+import com.mamydinyah.schedulemg.crudGen.DatePickerFragment
+import com.mamydinyah.schedulemg.crudGen.EditModal
 import com.mamydinyah.schedulemg.data.Task
 import com.mamydinyah.schedulemg.data.TaskAdapter
 import com.mamydinyah.schedulemg.databinding.FragmentAllBinding
@@ -46,11 +47,14 @@ class AllFragment : Fragment() {
                     allViewModel.deleteTaskById(task.id)
                 }, { task ->
                     showDeleteConfirmationDialog(task)
+                }, { task ->
+                    showEditTaskDialog(task)
                 })
                 binding.recyclerView.adapter = taskAdapter
             }
         }
 
+        // Filter date click handler
         binding.filterDate.dateInput.setOnClickListener {
             val datePicker = DatePickerFragment { selectedDate ->
                 binding.filterDate.dateInput.setText(selectedDate)
@@ -58,11 +62,24 @@ class AllFragment : Fragment() {
             }
             datePicker.show(parentFragmentManager, "datePicker")
         }
+
+        // Reset filter button
         binding.filterDate.resetButton.setOnClickListener {
             binding.filterDate.dateInput.text.clear()
             allViewModel.resetFilter()
         }
+
         return root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        allViewModel.startUpdatingTaskStatus()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        allViewModel.stopUpdatingTaskStatus()
     }
 
     private fun showDeleteConfirmationDialog(task: Task) {
@@ -84,16 +101,22 @@ class AllFragment : Fragment() {
             }
     }
 
+    private fun showEditTaskDialog(task: Task) {
+        val editModal = EditModal(task, allViewModel.getTaskRepository())
+        editModal.show(parentFragmentManager, "editTaskModal")
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-    /*private fun deleteOldDatabase() {
-        val context = requireContext()
-        val dbName = "task_database"
-        context.deleteDatabase(dbName)
-        Toast.makeText(context, "Old database deleted", Toast.LENGTH_SHORT).show()
-    }*/
-
 }
+
+
+/*private fun deleteOldDatabase() {
+    val context = requireContext()
+    val dbName = "task_database"
+    context.deleteDatabase(dbName)
+    Toast.makeText(context, "Old database deleted", Toast.LENGTH_SHORT).show()
+}*/
+

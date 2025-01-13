@@ -9,6 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mamydinyah.schedulemg.crudGen.DatePickerFragment
+import com.mamydinyah.schedulemg.crudGen.EditModal
 import com.mamydinyah.schedulemg.data.Task
 import com.mamydinyah.schedulemg.data.TaskAdapter
 import com.mamydinyah.schedulemg.databinding.FragmentFinishedBinding
@@ -34,23 +36,48 @@ class FinishedFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Observe tasks
-        finishedVIewModel.tasksByStatusFinished.observe(viewLifecycleOwner) { tasks ->
+        finishedVIewModel.filteredTasks.observe(viewLifecycleOwner) { tasks ->
             if (tasks.isNullOrEmpty()) {
                 binding.textNoTasks.visibility = View.VISIBLE
                 binding.recyclerView.visibility = View.GONE
             } else {
                 binding.textNoTasks.visibility = View.GONE
                 binding.recyclerView.visibility = View.VISIBLE
+
                 val taskAdapter = TaskAdapter(tasks, { task ->
                     finishedVIewModel.deleteTaskById(task.id)
                 }, { task ->
                     showDeleteConfirmationDialog(task)
+                }, { task ->
+                    showEditTaskDialog(task)
                 })
                 binding.recyclerView.adapter = taskAdapter
             }
         }
 
+        binding.filterDate.dateInput.setOnClickListener {
+            val datePicker = DatePickerFragment { selectedDate ->
+                binding.filterDate.dateInput.setText(selectedDate)
+                finishedVIewModel.filterTasksByDate(selectedDate)
+            }
+            datePicker.show(parentFragmentManager, "datePicker")
+        }
+        binding.filterDate.resetButton.setOnClickListener {
+            binding.filterDate.dateInput.text.clear()
+            finishedVIewModel.resetFilter()
+        }
+
         return root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        finishedVIewModel.startUpdatingTaskStatus()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        finishedVIewModel.stopUpdatingTaskStatus()
     }
 
     private fun showDeleteConfirmationDialog(task: Task) {
@@ -80,6 +107,11 @@ class FinishedFragment : Fragment() {
                     )
                 )
             }
+    }
+
+    private fun showEditTaskDialog(task: Task) {
+        val editModal = EditModal(task, finishedVIewModel.getTaskRepository())
+        editModal.show(parentFragmentManager, "editTaskModal")
     }
 
     override fun onDestroyView() {

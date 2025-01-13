@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface TaskDao {
@@ -24,4 +25,13 @@ interface TaskDao {
 
     @Query("SELECT * FROM task_table WHERE status = 'finished' ORDER BY id ASC")
     fun getTasksByStatusFinished(): LiveData<List<Task>>
+
+    @Query("SELECT * FROM task_table")
+    fun getAllTasksSync(): List<Task>
+
+    @Query("SELECT * FROM task_table WHERE id = :id LIMIT 1")
+    fun getTaskById(id: Int): LiveData<Task>
+
+    @Update
+    fun update(task: Task)
 }

@@ -84,6 +84,8 @@ class MainActivity : AppCompatActivity() {
         binding.appBarMain.fab.setOnClickListener {
             showFormDialog()
         }
+
+        taskRepository.updateTaskStatus()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -239,7 +241,7 @@ class MainActivity : AppCompatActivity() {
         buttonSubmit.setOnClickListener {
             val title = editTextTitle.text.toString().trim()
             val description = editTextDescription.text.toString().trim()
-            val date = editTextDate.text.toString().trim() // Maintenant dans le format yyyy-MM-dd
+            val date = editTextDate.text.toString().trim()
             val startTime = editTextStartTime.text.toString().trim()
             val endTime = editTextEndTime.text.toString().trim()
 
@@ -290,7 +292,7 @@ class MainActivity : AppCompatActivity() {
                     id = 0,
                     title = title,
                     description = description,
-                    date = date, // Date au format yyyy-MM-dd
+                    date = date,
                     startTime = startTime,
                     endTime = endTime,
                     status = getStatus(date, startTime, endTime)
@@ -311,14 +313,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getStatus(date: String, startTime: String, endTime: String): String {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
         val currentDateTime = Calendar.getInstance()
 
         return try {
             val taskStartDateTime = Calendar.getInstance()
             val taskEndDateTime = Calendar.getInstance()
-            taskStartDateTime.time = dateFormat.parse("$date $startTime")
-            taskEndDateTime.time = dateFormat.parse("$date $endTime")
+            taskStartDateTime.time = dateTimeFormat.parse("$date $startTime")
+            taskEndDateTime.time = dateTimeFormat.parse("$date $endTime")
 
             when {
                 taskEndDateTime.before(currentDateTime) -> "finished"

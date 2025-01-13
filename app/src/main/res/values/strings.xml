@@ -13,6 +13,7 @@
     <string name="menu_inprogress">In Progress</string>
     <string name="menu_finished">Finished</string>
     <string name="save">Save</string>
+    <string name="update">Update</string>
     <string name="close">Close</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
@@ -33,6 +34,14 @@
     <string name="endTimeError">End time must be after start time</string>
     <string name="descriptionError">Descriptions are required</string>
     <string name="titleError">Title is required</string>
+    <string name="search">Search by Date</string>
+    <string name="schedulemg_icon">ScheduleMg Icon</string>
+    <string name="descriptionScheduleMg">ScheduleMg is a comprehensive scheduling application designed to help you manage your tasks every day.</string>
+    <string name="dateApp">January 2025</string>
+    <string name="copyright">© Randriamanampisoa Mamy Dinyah</string>
+    <string name="facebook">Facebook</string>
+    <string name="whatsapp">WhatsApp</string>
+    <string name="email">Email</string>
 
     <string-array name="filter_options">
         <item>Last Week</item>

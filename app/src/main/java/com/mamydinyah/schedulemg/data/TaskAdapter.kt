@@ -9,7 +9,8 @@ import com.mamydinyah.schedulemg.databinding.ItemBinding
 class TaskAdapter(
     private val tasks: List<Task>,
     private val deleteTaskCallback: (Task) -> Unit,
-    private val confirmDeleteCallback: (Task) -> Unit
+    private val confirmDeleteCallback: (Task) -> Unit,
+    private val editTaskCallback: (Task) -> Unit
 ) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     inner class TaskViewHolder(private val binding: ItemBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -17,7 +18,7 @@ class TaskAdapter(
             binding.title.text = task.title
             binding.description.text = task.description
             binding.dateTitle.text = task.date
-            val formattedTime = "${task.startTime} <--> ${task.endTime}"
+            val formattedTime = "${task.startTime} ---> ${task.endTime}"
             binding.startTime.text = formattedTime
             binding.status.text = task.status
             binding.statusPoint.text = "**"
@@ -25,6 +26,10 @@ class TaskAdapter(
 
             binding.delete.setOnClickListener {
                 confirmDeleteCallback(task)
+            }
+
+            binding.root.setOnClickListener {
+                editTaskCallback(task)
             }
         }
 

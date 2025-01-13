@@ -8,7 +8,7 @@
         android:id="@+id/dateInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Filter by Date"
+        android:hint="@string/search"
         android:inputType="date"
         android:focusable="false"
         android:clickable="true"

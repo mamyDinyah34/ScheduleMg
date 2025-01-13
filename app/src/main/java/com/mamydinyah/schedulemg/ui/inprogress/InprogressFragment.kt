@@ -9,6 +9,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mamydinyah.schedulemg.crudGen.DatePickerFragment
+import com.mamydinyah.schedulemg.crudGen.EditModal
 import com.mamydinyah.schedulemg.data.Task
 import com.mamydinyah.schedulemg.data.TaskAdapter
 import com.mamydinyah.schedulemg.databinding.FragmentInprogressBinding
@@ -34,23 +36,48 @@ class InprogressFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Observe tasks
-        inProgressViewModel.tasksByStatusInProgress.observe(viewLifecycleOwner) { tasks ->
+        inProgressViewModel.filteredTasks.observe(viewLifecycleOwner) { tasks ->
             if (tasks.isNullOrEmpty()) {
                 binding.textNoTasks.visibility = View.VISIBLE
                 binding.recyclerView.visibility = View.GONE
             } else {
                 binding.textNoTasks.visibility = View.GONE
                 binding.recyclerView.visibility = View.VISIBLE
+
                 val taskAdapter = TaskAdapter(tasks, { task ->
                     inProgressViewModel.deleteTaskById(task.id)
                 }, { task ->
                     showDeleteConfirmationDialog(task)
+                }, { task ->
+                    showEditTaskDialog(task)
                 })
                 binding.recyclerView.adapter = taskAdapter
             }
         }
 
+        binding.filterDate.dateInput.setOnClickListener {
+            val datePicker = DatePickerFragment { selectedDate ->
+                binding.filterDate.dateInput.setText(selectedDate)
+                inProgressViewModel.filterTasksByDate(selectedDate)
+            }
+            datePicker.show(parentFragmentManager, "datePicker")
+        }
+        binding.filterDate.resetButton.setOnClickListener {
+            binding.filterDate.dateInput.text.clear()
+            inProgressViewModel.resetFilter()
+        }
+
         return root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        inProgressViewModel.startUpdatingTaskStatus()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        inProgressViewModel.stopUpdatingTaskStatus()
     }
 
     private fun showDeleteConfirmationDialog(task: Task) {
@@ -85,5 +112,10 @@ class InprogressFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun showEditTaskDialog(task: Task) {
+        val editModal = EditModal(task, inProgressViewModel.getTaskRepository())
+        editModal.show(parentFragmentManager, "editTaskModal")
     }
 }

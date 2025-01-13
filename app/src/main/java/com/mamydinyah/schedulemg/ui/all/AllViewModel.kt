@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.mamydinyah.schedulemg.crudGen.TaskStatusUpdater
 import com.mamydinyah.schedulemg.data.Connection
 import com.mamydinyah.schedulemg.data.Task
 import com.mamydinyah.schedulemg.data.TaskRepository
@@ -19,6 +20,7 @@ class AllViewModel(application: Application) : ViewModel() {
     val filteredTasks = MediatorLiveData<List<Task>>().apply {
         value = emptyList()
     }
+    private val taskStatusUpdater: TaskStatusUpdater
 
     init {
         val taskDao = Connection.getDatabase(application).taskDao()
@@ -32,6 +34,15 @@ class AllViewModel(application: Application) : ViewModel() {
         filteredTasks.addSource(selectedDate) { date ->
             filterTasks(allTasks.value, date)
         }
+        taskStatusUpdater = TaskStatusUpdater(repository)
+    }
+
+    fun startUpdatingTaskStatus() {
+        taskStatusUpdater.start()
+    }
+
+    fun stopUpdatingTaskStatus() {
+        taskStatusUpdater.stop()
     }
 
     private fun filterTasks(tasks: List<Task>?, date: String?) {
@@ -66,4 +77,13 @@ class AllViewModel(application: Application) : ViewModel() {
     fun resetFilter() {
         selectedDate.value = ""
     }
+
+    fun getTaskById(id: Int): LiveData<Task> {
+        return repository.getTaskById(id)
+    }
+
+    fun getTaskRepository(): TaskRepository {
+        return repository
+    }
 }
+
