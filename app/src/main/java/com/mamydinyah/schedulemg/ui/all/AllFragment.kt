@@ -55,6 +55,12 @@ class AllFragment : Fragment() {
             }
         }
 
+        binding.filterDate.btnToday.setOnClickListener{
+            allViewModel.tasksForToday.observe(viewLifecycleOwner) { tasks ->
+                allViewModel.filterTasks(tasks, "")
+            }
+        }
+
         // Filter date click handler
         binding.filterDate.dateInput.setOnClickListener {
             val datePicker = DatePickerFragment { selectedDate ->

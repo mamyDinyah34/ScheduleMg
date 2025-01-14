@@ -55,6 +55,12 @@ class FinishedFragment : Fragment() {
             }
         }
 
+        binding.filterDate.btnToday.setOnClickListener{
+            finishedVIewModel.tasksFinishedForToday.observe(viewLifecycleOwner) { tasks ->
+                finishedVIewModel.filterTasks(tasks, "")
+            }
+        }
+
         binding.filterDate.dateInput.setOnClickListener {
             val datePicker = DatePickerFragment { selectedDate ->
                 binding.filterDate.dateInput.setText(selectedDate)
@@ -62,10 +68,30 @@ class FinishedFragment : Fragment() {
             }
             datePicker.show(parentFragmentManager, "datePicker")
         }
+
         binding.filterDate.resetButton.setOnClickListener {
             binding.filterDate.dateInput.text.clear()
             finishedVIewModel.resetFilter()
         }
+
+        binding.filterDate.btnAll.setOnClickListener {
+            finishedVIewModel.tasksByStatusFinished.observe(viewLifecycleOwner) { tasks ->
+                finishedVIewModel.filterTasks(tasks, "")
+            }
+        }
+
+        binding.filterDate.btnLastWeek.setOnClickListener {
+            finishedVIewModel.tasksFinishedForLastWeek.observe(viewLifecycleOwner) { tasks ->
+                finishedVIewModel.filterTasks(tasks, "")
+            }
+        }
+
+        binding.filterDate.btnThisWeek.setOnClickListener {
+            finishedVIewModel.tasksFinishedForThisWeek.observe(viewLifecycleOwner) { tasks ->
+                finishedVIewModel.filterTasks(tasks, "")
+            }
+        }
+        binding.filterDate.btnNextWeek.visibility = View.GONE
 
         return root
     }

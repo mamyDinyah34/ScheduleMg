@@ -10,22 +10,31 @@ import com.mamydinyah.schedulemg.data.Connection
 import com.mamydinyah.schedulemg.data.Task
 import com.mamydinyah.schedulemg.data.TaskRepository
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class FinishedVIewModel(application: Application) : ViewModel() {
 
     val tasksByStatusFinished: LiveData<List<Task>>
+    val tasksFinishedForToday: LiveData<List<Task>>
+    val tasksFinishedForThisWeek: LiveData<List<Task>>
+    val tasksFinishedForLastWeek: LiveData<List<Task>>
     private val repository: TaskRepository
     private val selectedDate = MutableLiveData<String>()
     val filteredTasks = MediatorLiveData<List<Task>>().apply {
         value = emptyList()
     }
+    private val currentFilterMode = MutableLiveData<String>()
     private val taskStatusUpdater: TaskStatusUpdater
 
     init {
         val taskDao = Connection.getDatabase(application).taskDao()
         repository = TaskRepository(taskDao)
         tasksByStatusFinished = repository.tasksByStatusFinished()
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        tasksFinishedForToday = repository.getTasksFinishedForToday(today)
+        tasksFinishedForThisWeek = repository.getTasksFinishedForThisWeek()
+        tasksFinishedForLastWeek = repository.getTasksFinishedForLastWeek()
 
         filteredTasks.addSource(tasksByStatusFinished) { tasks ->
             filterTasks(tasks, selectedDate.value)
@@ -45,9 +54,15 @@ class FinishedVIewModel(application: Application) : ViewModel() {
         taskStatusUpdater.stop()
     }
 
-    private fun filterTasks(tasks: List<Task>?, date: String?) {
+    fun filterTasks(tasks: List<Task>?, date: String?) {
+        val filteredByWeek = when (currentFilterMode.value) {
+            "lastWeek" -> tasksFinishedForLastWeek.value
+            "thisWeek" -> tasksFinishedForThisWeek.value
+            else -> tasks
+        }
+
         if (date.isNullOrEmpty()) {
-            filteredTasks.value = tasks
+            filteredTasks.value = filteredByWeek
         } else {
             val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
             val dateToCompare = try {
@@ -58,7 +73,7 @@ class FinishedVIewModel(application: Application) : ViewModel() {
             }
 
             if (dateToCompare != null) {
-                val filtered = tasks?.filter { it.date == dateToCompare }
+                val filtered = filteredByWeek?.filter { it.date == dateToCompare }
                 filteredTasks.value = filtered
             } else {
                 filteredTasks.value = emptyList()

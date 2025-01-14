@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:padding="8dp">
 
-    <!-- Search Date and Reset Button Row -->
     <LinearLayout
         android:id="@+id/searchRow"
         android:layout_width="match_parent"

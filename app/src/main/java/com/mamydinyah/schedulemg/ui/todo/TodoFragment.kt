@@ -55,6 +55,12 @@ class TodoFragment : Fragment() {
             }
         }
 
+        binding.filterDate.btnToday.setOnClickListener{
+            todoViewModel.tasksTodoForToday.observe(viewLifecycleOwner) { tasks ->
+                todoViewModel.filterTasks(tasks, "")
+            }
+        }
+
         binding.filterDate.dateInput.setOnClickListener {
             val datePicker = DatePickerFragment { selectedDate ->
                 binding.filterDate.dateInput.setText(selectedDate)
@@ -62,9 +68,30 @@ class TodoFragment : Fragment() {
             }
             datePicker.show(parentFragmentManager, "datePicker")
         }
+
         binding.filterDate.resetButton.setOnClickListener {
             binding.filterDate.dateInput.text.clear()
             todoViewModel.resetFilter()
+        }
+
+        binding.filterDate.btnAll.setOnClickListener {
+            todoViewModel.tasksByStatusToDo.observe(viewLifecycleOwner) { tasks ->
+                todoViewModel.filterTasks(tasks, "")
+            }
+        }
+
+        binding.filterDate.btnLastWeek.visibility = View.GONE
+
+        binding.filterDate.btnThisWeek.setOnClickListener {
+            todoViewModel.getTasksTodoForThisWeek.observe(viewLifecycleOwner) { tasks ->
+                todoViewModel.filterTasks(tasks, "")
+            }
+        }
+
+        binding.filterDate.btnNextWeek.setOnClickListener {
+            todoViewModel.getTasksToDoForNextWeek.observe(viewLifecycleOwner) { tasks ->
+                todoViewModel.filterTasks(tasks, "")
+            }
         }
 
         return root

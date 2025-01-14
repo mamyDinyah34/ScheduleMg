@@ -68,6 +68,18 @@ class TaskRepository(private val taskDao: TaskDao) {
         taskDao.update(task)
     }
 
+    fun getTasksForToday(today: String): LiveData<List<Task>> {
+        return taskDao.getTasksForToday(today)
+    }
+
+    fun getTasksTodoForToday(today: String): LiveData<List<Task>> {
+        return taskDao.getTasksTodoForToday(today)
+    }
+
+    fun getTasksFinishedForToday(today: String): LiveData<List<Task>> {
+        return taskDao.getTasksFinishedForToday(today)
+    }
+
     fun getTasksForThisWeek(): LiveData<List<Task>> {
         return getTasksForWeek(0)
     }
@@ -83,7 +95,39 @@ class TaskRepository(private val taskDao: TaskDao) {
     private fun getTasksForWeek(offset: Int): LiveData<List<Task>> {
         val (startOfWeek, endOfWeek) = getWeekRange(offset)
         Log.d("TaskRepository", "Fetching tasks for week between $startOfWeek and $endOfWeek")
-        return taskDao.getTasksWithinDateRange(startOfWeek, endOfWeek).map { tasks ->
+        return taskDao.getTasksDateRange(startOfWeek, endOfWeek).map { tasks ->
+            tasks.sortedWith(compareBy<Task> { it.date }.thenBy { it.startTime })
+        }
+    }
+
+    fun getTasksTodoForThisWeek(): LiveData<List<Task>> {
+        return getTasksTodoForWeek(0)
+    }
+
+    fun getTasksToDoForNextWeek(): LiveData<List<Task>> {
+        return getTasksTodoForWeek(1)
+    }
+
+    private fun getTasksTodoForWeek(offset: Int): LiveData<List<Task>> {
+        val (startOfWeek, endOfWeek) = getWeekRange(offset)
+        Log.d("TaskRepository", "Fetching tasks for week between $startOfWeek and $endOfWeek")
+        return taskDao.getTasksToDoRange(startOfWeek, endOfWeek).map { tasks ->
+            tasks.sortedWith(compareBy<Task> { it.date }.thenBy { it.startTime })
+        }
+    }
+
+    fun getTasksFinishedForThisWeek(): LiveData<List<Task>> {
+        return getTasksFinishedForWeek(0)
+    }
+
+    fun getTasksFinishedForLastWeek(): LiveData<List<Task>> {
+        return getTasksFinishedForWeek(-1)
+    }
+
+    private fun getTasksFinishedForWeek(offset: Int): LiveData<List<Task>> {
+        val (startOfWeek, endOfWeek) = getWeekRange(offset)
+        Log.d("TaskRepository", "Fetching tasks for week between $startOfWeek and $endOfWeek")
+        return taskDao.getTasksFinishedRange(startOfWeek, endOfWeek).map { tasks ->
             tasks.sortedWith(compareBy<Task> { it.date }.thenBy { it.startTime })
         }
     }

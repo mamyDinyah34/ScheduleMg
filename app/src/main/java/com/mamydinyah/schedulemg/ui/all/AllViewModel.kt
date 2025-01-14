@@ -10,11 +10,13 @@ import com.mamydinyah.schedulemg.data.Connection
 import com.mamydinyah.schedulemg.data.Task
 import com.mamydinyah.schedulemg.data.TaskRepository
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class AllViewModel(application: Application) : ViewModel() {
 
     val allTasks: LiveData<List<Task>>
+    val tasksForToday: LiveData<List<Task>>
     val tasksForThisWeek: LiveData<List<Task>>
     val tasksForLastWeek: LiveData<List<Task>>
     val tasksForNextWeek: LiveData<List<Task>>
@@ -30,6 +32,8 @@ class AllViewModel(application: Application) : ViewModel() {
         val taskDao = Connection.getDatabase(application).taskDao()
         repository = TaskRepository(taskDao)
         allTasks = repository.allTasks
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        tasksForToday = repository.getTasksForToday(today)
         tasksForThisWeek = repository.getTasksForThisWeek()
         tasksForLastWeek = repository.getTasksForLastWeek()
         tasksForNextWeek = repository.getTasksForNextWeek()

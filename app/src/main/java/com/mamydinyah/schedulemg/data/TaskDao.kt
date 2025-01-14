@@ -37,31 +37,48 @@ interface TaskDao {
 
     @Query("""
     SELECT * FROM task_table
-    WHERE strftime('%Y-%W', date) = strftime('%Y-%W', 'now')
-    ORDER BY id ASC
+    WHERE date = :today
+    ORDER BY startTime ASC, endTime ASC
     """)
-    fun getTasksForThisWeek(): LiveData<List<Task>>
-
+    fun getTasksForToday(today: String): LiveData<List<Task>>
 
     @Query("""
     SELECT * FROM task_table
-    WHERE strftime('%Y-%W', date) = strftime('%Y-%W', 'now', '-1 week')
-    ORDER BY id ASC
+    WHERE date = :today
+    AND status = 'to do'
+    ORDER BY startTime ASC, endTime ASC
     """)
-    fun getTasksForLastWeek(): LiveData<List<Task>>
-
+    fun getTasksTodoForToday(today: String): LiveData<List<Task>>
 
     @Query("""
-        SELECT * FROM task_table
-        WHERE strftime('%Y-%W', date) = strftime('%Y-%W', 'now', '+1 week')
-        ORDER BY id ASC
+    SELECT * FROM task_table
+    WHERE date = :today
+    AND status = 'finished'
+    ORDER BY startTime ASC, endTime ASC
     """)
-    fun getTasksForNextWeek(): LiveData<List<Task>>
+    fun getTasksFinishedForToday(today: String): LiveData<List<Task>>
+
     @Query("""
     SELECT * FROM task_table
     WHERE date BETWEEN :startDate AND :endDate
     ORDER BY id ASC
     """)
-    fun getTasksWithinDateRange(startDate: String, endDate: String): LiveData<List<Task>>
+    fun getTasksDateRange(startDate: String, endDate: String): LiveData<List<Task>>
 
+    @Query("""
+    SELECT * FROM task_table
+    WHERE date BETWEEN :startDate AND :endDate
+    AND status = 'to do'
+    ORDER BY id ASC
+    """)
+    fun getTasksToDoRange(startDate: String, endDate: String): LiveData<List<Task>>
+
+
+    @Query("""
+    SELECT * FROM task_table
+    WHERE date BETWEEN :startDate AND :endDate
+    AND status = 'finished'
+    ORDER BY id ASC
+    """)
+    fun getTasksFinishedRange(startDate: String, endDate: String): LiveData<List<Task>>
 }

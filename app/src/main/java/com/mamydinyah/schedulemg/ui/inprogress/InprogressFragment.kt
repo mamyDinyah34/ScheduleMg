@@ -35,7 +35,11 @@ class InprogressFragment : Fragment() {
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Observe tasks
+        // Masquer les boutons
+        binding.filterDate.buttonRow.visibility = View.GONE
+
+        binding.filterDate.btnToday.visibility = View.GONE
+
         inProgressViewModel.filteredTasks.observe(viewLifecycleOwner) { tasks ->
             if (tasks.isNullOrEmpty()) {
                 binding.textNoTasks.visibility = View.VISIBLE
@@ -69,6 +73,7 @@ class InprogressFragment : Fragment() {
 
         return root
     }
+
 
     override fun onStart() {
         super.onStart()

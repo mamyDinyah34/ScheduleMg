@@ -10,22 +10,31 @@ import com.mamydinyah.schedulemg.data.Connection
 import com.mamydinyah.schedulemg.data.Task
 import com.mamydinyah.schedulemg.data.TaskRepository
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class TodoViewModel(application: Application) : ViewModel() {
 
     val tasksByStatusToDo: LiveData<List<Task>>
+    val tasksTodoForToday: LiveData<List<Task>>
+    val getTasksTodoForThisWeek: LiveData<List<Task>>
+    val getTasksToDoForNextWeek: LiveData<List<Task>>
     private val repository: TaskRepository
     private val selectedDate = MutableLiveData<String>()
     val filteredTasks = MediatorLiveData<List<Task>>().apply {
         value = emptyList()
     }
+    private val currentFilterMode = MutableLiveData<String>()
     private val taskStatusUpdater: TaskStatusUpdater
 
     init {
         val taskDao = Connection.getDatabase(application).taskDao()
         repository = TaskRepository(taskDao)
         tasksByStatusToDo = repository.tasksByStatusToDo()
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        tasksTodoForToday = repository.getTasksTodoForToday(today)
+        getTasksTodoForThisWeek = repository.getTasksTodoForThisWeek()
+        getTasksToDoForNextWeek = repository.getTasksToDoForNextWeek()
 
         filteredTasks.addSource(tasksByStatusToDo) { tasks ->
             filterTasks(tasks, selectedDate.value)
@@ -45,9 +54,15 @@ class TodoViewModel(application: Application) : ViewModel() {
         taskStatusUpdater.stop()
     }
 
-    private fun filterTasks(tasks: List<Task>?, date: String?) {
+    fun filterTasks(tasks: List<Task>?, date: String?) {
+        val filteredByWeek = when (currentFilterMode.value) {
+            "thisWeek" -> getTasksTodoForThisWeek.value
+            "nextWeek" -> getTasksToDoForNextWeek.value
+            else -> tasks
+        }
+
         if (date.isNullOrEmpty()) {
-            filteredTasks.value = tasks
+            filteredTasks.value = filteredByWeek
         } else {
             val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
             val dateToCompare = try {
@@ -58,7 +73,7 @@ class TodoViewModel(application: Application) : ViewModel() {
             }
 
             if (dateToCompare != null) {
-                val filtered = tasks?.filter { it.date == dateToCompare }
+                val filtered = filteredByWeek?.filter { it.date == dateToCompare }
                 filteredTasks.value = filtered
             } else {
                 filteredTasks.value = emptyList()
@@ -76,6 +91,8 @@ class TodoViewModel(application: Application) : ViewModel() {
 
     fun resetFilter() {
         selectedDate.value = ""
+        currentFilterMode.value = "all"
+        filterTasks(tasksByStatusToDo.value, null)
     }
 
     fun getTaskRepository(): TaskRepository {
