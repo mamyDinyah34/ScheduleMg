@@ -29,7 +29,7 @@ class TodoViewModel(application: Application) : ViewModel() {
 
     init {
         val taskDao = Connection.getDatabase(application).taskDao()
-        repository = TaskRepository(taskDao)
+        repository = TaskRepository(taskDao, application)
         tasksByStatusToDo = repository.tasksByStatusToDo()
         val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         tasksTodoForToday = repository.getTasksTodoForToday(today)

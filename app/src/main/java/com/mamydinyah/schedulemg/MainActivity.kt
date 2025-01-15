@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         val database = Connection.getDatabase(this)
         val taskDao = database.taskDao()
-        taskRepository = TaskRepository(taskDao)
+        taskRepository = TaskRepository(taskDao, this)
 
         addModal = AddModal(this, taskRepository)
 

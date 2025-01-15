@@ -29,7 +29,7 @@ class FinishedVIewModel(application: Application) : ViewModel() {
 
     init {
         val taskDao = Connection.getDatabase(application).taskDao()
-        repository = TaskRepository(taskDao)
+        repository = TaskRepository(taskDao, application)
         tasksByStatusFinished = repository.tasksByStatusFinished()
         val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         tasksFinishedForToday = repository.getTasksFinishedForToday(today)

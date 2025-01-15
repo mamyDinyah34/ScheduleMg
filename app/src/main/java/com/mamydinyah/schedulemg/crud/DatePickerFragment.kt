@@ -15,7 +15,6 @@ class DatePickerFragment(private val onDateSelected: (String) -> Unit) : DialogF
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        // Create a DatePickerDialog with the selected date
         return DatePickerDialog(requireContext(), this, year, month, day)
     }
 

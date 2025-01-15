@@ -30,7 +30,7 @@ class AllViewModel(application: Application) : ViewModel() {
 
     init {
         val taskDao = Connection.getDatabase(application).taskDao()
-        repository = TaskRepository(taskDao)
+        repository = TaskRepository(taskDao, application)
         allTasks = repository.allTasks
         val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         tasksForToday = repository.getTasksForToday(today)

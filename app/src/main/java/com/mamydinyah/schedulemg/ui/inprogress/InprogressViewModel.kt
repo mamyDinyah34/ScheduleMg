@@ -24,7 +24,7 @@ class InprogressViewModel(application: Application) : ViewModel() {
 
     init {
         val taskDao = Connection.getDatabase(application).taskDao()
-        repository = TaskRepository(taskDao)
+        repository = TaskRepository(taskDao, application)
         tasksByStatusInProgress = repository.tasksByStatusInProgress()
 
         filteredTasks.addSource(tasksByStatusInProgress) { tasks ->

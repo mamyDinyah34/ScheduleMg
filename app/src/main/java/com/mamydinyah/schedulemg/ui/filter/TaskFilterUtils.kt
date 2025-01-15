@@ -1,3 +1,4 @@
+/*
 package com.mamydinyah.schedulemg.ui.filter
 
 import com.mamydinyah.schedulemg.data.Task
@@ -11,4 +12,4 @@ object TaskFilterUtils {
     fun getTasksByDateRange(tasks: List<Task>, startDate: String, endDate: String): List<Task> {
         return tasks.filter { it.date in startDate..endDate }
     }
-}
+}*/

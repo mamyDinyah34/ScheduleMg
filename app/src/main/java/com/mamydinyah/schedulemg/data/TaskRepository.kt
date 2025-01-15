@@ -1,14 +1,21 @@
 package com.mamydinyah.schedulemg.data
 
+import android.content.Context
 import android.util.Log
-import java.text.SimpleDateFormat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import com.mamydinyah.schedulemg.notification.NotificationHelper
+import com.mamydinyah.schedulemg.notification.TaskReminderWorker
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
-class TaskRepository(private val taskDao: TaskDao) {
+class TaskRepository(private val taskDao: TaskDao, private val context: Context) {
     val allTasks: LiveData<List<Task>> = taskDao.getAllTasks()
 
     fun insertTask(task: Task) {
@@ -35,6 +42,21 @@ class TaskRepository(private val taskDao: TaskDao) {
         return taskDao.getTasksByStatusFinished()
     }
 
+    private fun scheduleTaskReminder(taskId: Int, title: String, content: String, delayInMillis: Long) {
+        val workRequest = OneTimeWorkRequestBuilder<TaskReminderWorker>()
+            .setInitialDelay(delayInMillis, TimeUnit.MILLISECONDS)
+            .setInputData(
+                workDataOf(
+                    "taskId" to taskId,
+                    "title" to title,
+                    "content" to content
+                )
+            )
+            .build()
+
+        WorkManager.getInstance(context).enqueue(workRequest)
+    }
+
     fun updateTaskStatus() {
         Executors.newSingleThreadExecutor().execute {
             val tasks = taskDao.getAllTasksSync()
@@ -56,9 +78,32 @@ class TaskRepository(private val taskDao: TaskDao) {
                     task.status = newStatus
                     taskDao.update(task)
                 }
+
+                // Planifier la notification pour le début de la tâche
+                val delayStart = taskStartDateTime.time - currentDateTime.time
+                if (delayStart > 0) {
+                    scheduleTaskReminder(
+                        task.id,
+                        "Tâche à commencer",
+                        "Il est temps de commencer la tâche : ${task.title}",
+                        delayStart
+                    )
+                }
+
+                // Planifier la notification pour la fin de la tâche
+                val delayEnd = taskEndDateTime.time - currentDateTime.time
+                if (delayEnd > 0) {
+                    scheduleTaskReminder(
+                        task.id,
+                        "Tâche à terminer",
+                        "Il est temps de terminer la tâche : ${task.title}",
+                        delayEnd
+                    )
+                }
             }
         }
     }
+
 
     fun getTaskById(id: Int): LiveData<Task> {
         return taskDao.getTaskById(id)
@@ -152,5 +197,4 @@ class TaskRepository(private val taskDao: TaskDao) {
         Log.d("TaskRepository", "Week Range: $formattedStartDate to $formattedEndDate")
         return Pair(formattedStartDate, formattedEndDate)
     }
-
 }
