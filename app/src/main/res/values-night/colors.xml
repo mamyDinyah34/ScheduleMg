@@ -16,4 +16,9 @@
     <color name="icon_color">#FFFFFF</color>
     <color name="icon_delete">#EF5350</color>
     <color name="icon_edit">#2196F3</color>
+
+
+    <color name="cardToday">#1B5E20</color>
+    <color name="cardAll">#0D47A1</color>
+    <color name="cardMotivation">#F57F17</color>
 </resources>

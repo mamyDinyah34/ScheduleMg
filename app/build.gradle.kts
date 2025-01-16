@@ -63,5 +63,5 @@ dependencies {
     kapt ("androidx.room:room-compiler:2.5.2")
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
     implementation ("androidx.work:work-runtime-ktx:2.7.1")
-
+    implementation ("com.google.code.gson:gson:2.10.1")
 }

@@ -35,7 +35,6 @@ class InprogressFragment : Fragment() {
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Masquer les boutons
         binding.filterDate.buttonRow.visibility = View.GONE
 
         binding.filterDate.btnToday.visibility = View.GONE

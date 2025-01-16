@@ -7,7 +7,6 @@ import androidx.lifecycle.map
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.mamydinyah.schedulemg.notification.NotificationHelper
 import com.mamydinyah.schedulemg.notification.TaskReminderWorker
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -79,24 +78,24 @@ class TaskRepository(private val taskDao: TaskDao, private val context: Context)
                     taskDao.update(task)
                 }
 
-                // Planifier la notification pour le début de la tâche
+                //start
                 val delayStart = taskStartDateTime.time - currentDateTime.time
                 if (delayStart > 0) {
                     scheduleTaskReminder(
                         task.id,
-                        "Tâche à commencer",
-                        "Il est temps de commencer la tâche : ${task.title}",
+                        "Task to Start",
+                        "It's time to start the task: ${task.title}",
                         delayStart
                     )
                 }
 
-                // Planifier la notification pour la fin de la tâche
+                //end
                 val delayEnd = taskEndDateTime.time - currentDateTime.time
                 if (delayEnd > 0) {
                     scheduleTaskReminder(
                         task.id,
-                        "Tâche à terminer",
-                        "Il est temps de terminer la tâche : ${task.title}",
+                        "Task to Complete",
+                        "It's time to complete the task: ${task.title}",
                         delayEnd
                     )
                 }
@@ -182,11 +181,11 @@ class TaskRepository(private val taskDao: TaskDao, private val context: Context)
         calendar.firstDayOfWeek = Calendar.MONDAY
         calendar.add(Calendar.WEEK_OF_YEAR, offset)
 
-        // Set to first day of week (Monday)
+        // Set to first (Monday)
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
         val startDate = calendar.time
 
-        // Move to last day of week (Sunday)
+        // Move to last (Sunday)
         calendar.add(Calendar.DAY_OF_WEEK, 6)
         val endDate = calendar.time
 
@@ -196,5 +195,17 @@ class TaskRepository(private val taskDao: TaskDao, private val context: Context)
 
         Log.d("TaskRepository", "Week Range: $formattedStartDate to $formattedEndDate")
         return Pair(formattedStartDate, formattedEndDate)
+    }
+
+    val totalTaskCount: LiveData<Int> = taskDao.getTotalTaskCount()
+
+    fun getTodayTaskCount(): LiveData<Int> {
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Calendar.getInstance().time)
+        return taskDao.getTodayTaskCount(today)
+    }
+
+    fun getTasksForTodaySortedByTime(): LiveData<List<Task>> {
+        val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Calendar.getInstance().time)
+        return taskDao.getTasksForTodaySortedByTime(today)
     }
 }

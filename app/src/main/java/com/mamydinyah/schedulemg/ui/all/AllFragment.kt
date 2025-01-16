@@ -61,7 +61,6 @@ class AllFragment : Fragment() {
             }
         }
 
-        // Filter date click handler
         binding.filterDate.dateInput.setOnClickListener {
             val datePicker = DatePickerFragment { selectedDate ->
                 binding.filterDate.dateInput.setText(selectedDate)
@@ -70,13 +69,11 @@ class AllFragment : Fragment() {
             datePicker.show(parentFragmentManager, "datePicker")
         }
 
-        // Reset filter button
         binding.filterDate.resetButton.setOnClickListener {
             binding.filterDate.dateInput.text.clear()
             allViewModel.resetFilter()
         }
 
-        // Button click handlers for task filters
         binding.filterDate.btnAll.setOnClickListener {
             allViewModel.allTasks.observe(viewLifecycleOwner) { tasks ->
                 allViewModel.filterTasks(tasks, "")

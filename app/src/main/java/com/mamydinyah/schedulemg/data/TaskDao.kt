@@ -81,4 +81,17 @@ interface TaskDao {
     ORDER BY id ASC
     """)
     fun getTasksFinishedRange(startDate: String, endDate: String): LiveData<List<Task>>
+
+    @Query("SELECT COUNT(*) FROM task_table")
+    fun getTotalTaskCount(): LiveData<Int>
+
+    @Query("SELECT COUNT(*) FROM task_table WHERE date = :today")
+    fun getTodayTaskCount(today: String): LiveData<Int>
+
+    @Query("""
+    SELECT * FROM task_table
+    WHERE date = :today
+    ORDER BY startTime ASC
+    """)
+    fun getTasksForTodaySortedByTime(today: String): LiveData<List<Task>>
 }

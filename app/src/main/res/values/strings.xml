@@ -3,7 +3,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">ScheduleMg</string>
-    <string name="nav_header_subtitle">mamydinyah34@gmail.com</string>
+    <string name="nav_header_subtitle">Your scheduling management application</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -46,5 +46,9 @@
     <string name="last_week">Last Week</string>
     <string name="next_week">Next Week</string>
     <string name="all">All</string>
-    <string name="today">Today</string>
+    <string name="today">Tasks For Today</string>
+    <string name="motivation">ScheduleMg</string>
+    <string name="total">Total Tasks</string>
+    <string name="today_task_count">%1$d</string>
+<string name="total_task_count">%1$d</string>
 </resources>

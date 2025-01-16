@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import java.util.Date
+import com.mamydinyah.schedulemg.R
 import java.util.concurrent.TimeUnit
 
 object NotificationHelper {
@@ -29,7 +30,7 @@ object NotificationHelper {
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle(title)
             .setContentText(content)
-            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setSmallIcon(R.mipmap.scheduly)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
             .build()
