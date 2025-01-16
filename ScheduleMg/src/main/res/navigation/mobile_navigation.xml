@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.mamydinyah.schedulemg.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_all"
+        android:name="com.mamydinyah.schedulemg.ui.all.AllFragment"
+        android:label="@string/menu_all"
+        tools:layout="@layout/fragment_all" />
+
+    <fragment
+        android:id="@+id/nav_todo"
+        android:name="com.mamydinyah.schedulemg.ui.todo.TodoFragment"
+        android:label="@string/menu_todo"
+        tools:layout="@layout/fragment_todo" />
+
+    <fragment
+        android:id="@+id/nav_inprogress"
+        android:name="com.mamydinyah.schedulemg.ui.inprogress.InprogressFragment"
+        android:label="@string/menu_inprogress"
+        tools:layout="@layout/fragment_inprogress" />
+
+    <fragment
+        android:id="@+id/nav_finished"
+        android:name="com.mamydinyah.schedulemg.ui.finished.FinishedFragment"
+        android:label="@string/menu_finished"
+        tools:layout="@layout/fragment_finished" />
+
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="com.mamydinyah.schedulemg.ui.about.AboutFragment"
+        android:label="@string/menu_about"
+        tools:layout="@layout/fragment_about" />
+</navigation>
