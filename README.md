@@ -2,7 +2,7 @@
 
 ScheduleMg is a scheduling management application that helps you organize your tasks and events efficiently. You can download the app from the following link:
 
-[![Download ScheduleMg](https://img.shields.io/badge/Download-ScheduleMg-blue)](https://drive.google.com/file/d/1xpf3trwOAsUYK15s9oMesECz_7dWSffe/view?usp=sharing)
+<a href="https://drive.google.com/file/d/1xpf3trwOAsUYK15s9oMesECz_7dWSffe/view?usp=sharing" target="_blank"><img src="https://img.shields.io/badge/Download-ScheduleMg-blue" alt="Download ScheduleMg"></a>
 
 ## Features ✨
 
@@ -31,7 +31,7 @@ ScheduleMg is compatible with Android devices running Android 7.1.1 (Nougat) and
 
 ## Installation 🚀
 
-1. Download the APK from the [![here]](https://drive.google.com/file/d/1xpf3trwOAsUYK15s9oMesECz_7dWSffe/view?usp=sharing).
+1. Download the APK from <a href="https://drive.google.com/file/d/1xpf3trwOAsUYK15s9oMesECz_7dWSffe/view?usp=sharing" target="_blank">here</a>.
 2. Install the APK on your Android device.
 3. Open the app and start managing your tasks!
 
